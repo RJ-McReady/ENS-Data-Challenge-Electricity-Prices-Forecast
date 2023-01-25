@@ -1,14 +1,14 @@
 import numpy as np
 import pandas as pd
-
+import matplotlib.pyplot as plt
 import sklearn.linear_model
 
 from model import *
 
 
 class LinearRegressionModel(Model):
-    def __init__(self, fit_intercept = True):
-        super().__init__()
+    def __init__(self, fit_intercept = True, name = "LinReg"):
+        super().__init__(name = name)
         self._fit_intercept = fit_intercept
         self.lr = sklearn.linear_model.LinearRegression(fit_intercept = fit_intercept)
         self._coef = None
@@ -25,6 +25,14 @@ class LinearRegressionModel(Model):
 
     def predict(self, x_test):
         return self.lr.predict(x_test)
+
+    def plot_coef(self):
+        fig, ax = plt.subplots(figsize=(6, 0.2 * len(self._coef.index)))
+        ax1 = ax
+        self._coef.plot(kind="barh", ax=ax1)
+        ax1.grid()
+        ax1.axvline(0, color="black", linestyle="--")
+        return fig, ax
 
     @property
     def coef(self):
