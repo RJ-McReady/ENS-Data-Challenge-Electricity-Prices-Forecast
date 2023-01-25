@@ -3,21 +3,21 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import sklearn.linear_model
 
-from model import *
+from models.model import *
 
 
 class LinearRegressionModel(Model):
-    def __init__(self, fit_intercept = True, name = "LinReg"):
-        super().__init__(name = name)
+    def __init__(self, fit_intercept=True, name="LinReg"):
+        super().__init__(name=name)
         self._fit_intercept = fit_intercept
-        self.lr = sklearn.linear_model.LinearRegression(fit_intercept = fit_intercept)
+        self.lr = sklearn.linear_model.LinearRegression(fit_intercept=fit_intercept)
         self._coef = None
         self._intercept = None
 
     def fit(self, x_train, y_train):
         self.lr.fit(x_train, y_train)
         if type(x_train) is pd.DataFrame:
-            self._coef = pd.Series(self.lr.coef_, index = x_train.columns, dtype = np.float64)
+            self._coef = pd.Series(self.lr.coef_, index=x_train.columns, dtype=np.float64)
             if self._fit_intercept:
                 self._coef["Intercept"] = self.lr.intercept_
         else:
@@ -39,3 +39,15 @@ class LinearRegressionModel(Model):
         return self._coef
 
 
+class RidgeRegressionModel(LinearRegressionModel):
+    def __init__(self, alpha=1., fit_intercept=True, name="RidgeReg"):
+        super().__init__(fit_intercept=fit_intercept, name=name)
+        self.alpha = alpha
+        self.lr = sklearn.linear_model.Ridge(alpha=self.alpha, fit_intercept=fit_intercept)
+
+
+class LassoRegressionModel(LinearRegressionModel):
+    def __init__(self, alpha=1., fit_intercept=True, name="LassoReg"):
+        super().__init__(fit_intercept=fit_intercept, name=name)
+        self.alpha = alpha
+        self.lr = sklearn.linear_model.Lasso(alpha=self.alpha, fit_intercept=fit_intercept)

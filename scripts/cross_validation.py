@@ -8,7 +8,7 @@ import scipy.stats
 class KFoldCrossValidation:
     def __init__(self, models, k=10):
         self._models = models
-        self.nb_models = len(self._nb_models)
+        self.nb_models = len(self._models)
         self._scores = np.zeros((k, self.nb_models), dtype=np.float64)
         self.k = k
 
@@ -17,8 +17,8 @@ class KFoldCrossValidation:
 
         for id_fold, (train_index, test_index) in enumerate(kf.split(x)):
             print("TRAIN:", train_index, "TEST:", test_index)
-            x_train, x_test = x[train_index], x[test_index]
-            y_train, y_test = y[train_index], y[test_index]
+            x_train, x_test = x.loc[train_index, :], x.loc[test_index, :]
+            y_train, y_test = y.loc[train_index], y.loc[test_index]
 
             for id_model, model in enumerate(self._models):
                 model.fit(x_train, y_train)
@@ -28,6 +28,13 @@ class KFoldCrossValidation:
 
     @property
     def scores(self):
-        for id_model, model in enumerate(self._models):
-            print(model.name, "mean score :", np.mean(self._scores[:, id_model]))
+        index = [f"fold_{fold}" for fold in range(self.k)]
+        index = pd.Index(index, name="fold_id")
+        columns = [model.name for model in self._models]
+        columns = pd.Index(columns, name="model")
+        scores = pd.DataFrame(self._scores, index = index, columns=columns)
+        return scores
 
+
+if __name__ == "__main__":
+    pass
