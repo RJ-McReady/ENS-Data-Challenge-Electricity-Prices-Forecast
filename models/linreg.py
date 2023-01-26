@@ -1,10 +1,11 @@
 import numpy as np
 import pandas as pd
+import os, sys
+sys.path.append(os.getcwd())
 
 import sklearn.linear_model
 
-from model import *
-
+from models.model import *
 
 class LinearRegressionModel(Model):
     def __init__(self, fit_intercept = True):
