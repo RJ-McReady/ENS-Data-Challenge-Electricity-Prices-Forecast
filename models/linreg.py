@@ -1,19 +1,12 @@
 import numpy as np
 import pandas as pd
-<<<<<<< HEAD
 import os, sys
+import matplotlib.pyplot as plt
 sys.path.append(os.getcwd())
 
 import sklearn.linear_model
 
 from models.model import *
-=======
-import matplotlib.pyplot as plt
-import sklearn.linear_model
-
-from models.model import *
-
->>>>>>> 66051b19f32e88ed41ba944bf83d5704f6d9e72b
 
 class LinearRegressionModel(Model):
     def __init__(self, fit_intercept=True, name="LinReg"):

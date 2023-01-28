@@ -12,11 +12,12 @@ class KFoldCrossValidation:
         self._scores = np.zeros((k, self.nb_models), dtype=np.float64)
         self.k = k
 
-    def run(self, x, y):
+    def run(self, x, y, verbose=True):
         kf = sklearn.model_selection.KFold(n_splits=self.k)
 
         for id_fold, (train_index, test_index) in enumerate(kf.split(x)):
-            print("TRAIN:", train_index, "TEST:", test_index)
+            if verbose:
+                print("TRAIN:", train_index, "TEST:", test_index)
             x_train, x_test = x.loc[train_index, :], x.loc[test_index, :]
             y_train, y_test = y.loc[train_index], y.loc[test_index]
 
@@ -32,7 +33,7 @@ class KFoldCrossValidation:
         index = pd.Index(index, name="fold_id")
         columns = [model.name for model in self._models]
         columns = pd.Index(columns, name="model")
-        scores = pd.DataFrame(self._scores, index = index, columns=columns)
+        scores = pd.DataFrame(self._scores, index=index, columns=columns)
         return scores
 
 
