@@ -1,12 +1,9 @@
-import numpy as np
-import pandas as pd
-import os, sys
-
-import sklearn.linear_model
-
-from models.model import *
+import sys
 import matplotlib.pyplot as plt
+import pandas as pd
 import sklearn.linear_model
+
+import utils.formatting
 
 from models.model import *
 
@@ -41,6 +38,9 @@ class LinearRegressionModel(Model):
         ax1.axvline(0, color="black", linestyle="--")
         return fig, ax
 
+    def __repr__(self):
+        return "LinReg"
+
     @property
     def coef(self):
         return self._coef
@@ -52,9 +52,21 @@ class RidgeRegressionModel(LinearRegressionModel):
         self.alpha = alpha
         self.lr = sklearn.linear_model.Ridge(alpha=self.alpha, fit_intercept=fit_intercept)
 
+    def __repr__(self):
+        descr = {"alpha": self.alpha}
+        descr = utils.formatting.dict_to_str(descr, brackets="()")
+        descr = f"RidgeReg{descr}"
+        return descr
+
 
 class LassoRegressionModel(LinearRegressionModel):
     def __init__(self, alpha=1., fit_intercept=True, name="LassoReg"):
         super().__init__(fit_intercept=fit_intercept, name=name)
         self.alpha = alpha
-        self.lr = sklearn.linear_model.Lasso(alpha=self.alpha, fit_intercept=fit_intercept)
+        self.lr = sklearn.linear_model.Lasso(alpha=self.alpha, fit_intercept=fit_intercept, max_iter=5000)
+
+    def __repr__(self):
+        descr = {"alpha": self.alpha}
+        descr = utils.formatting.dict_to_str(descr, brackets="()")
+        descr = f"LassoReg{descr}"
+        return descr

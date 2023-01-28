@@ -18,20 +18,21 @@ class PreProcessing:
 
 
 class MissingValuesLast(PreProcessing):
-    def __init__(self, name="missing_values_last", columns=None):
+    def __init__(self, name="missing_values_last", columns=None, default_value=0.):
         super().__init__(name, columns)
+        self._default_value = default_value
 
-    def __call__(self, x, default_value=0.):
+    def __call__(self, x):
         cols = self.columns(x)
         cols_indexer = pd.Index(['DAY_ID', 'COUNTRY']) \
             .append(cols).unique()
         acc = x[cols_indexer]
         acc = acc.set_index(['DAY_ID', 'COUNTRY']).unstack(-1)
         acc = acc.fillna(method="ffill")
-        if default_value is None:
+        if self._default_value is None:
             pass
         else:
-            acc = acc.fillna(default_value)  # for first values
+            acc = acc.fillna(self._default_value)  # for first values
         acc = acc.stack()
         acc = acc.reindex(x.set_index(['DAY_ID', 'COUNTRY']).index)
         acc = acc.reset_index()
@@ -59,6 +60,14 @@ class CenteredReduced(PreProcessing):
     def __call__(self, x):
         cols = self.columns(x)
         x.loc[:, cols] = (x.loc[:, cols] - x.loc[:, cols].mean(axis=0)) / x.loc[:, cols].std(axis=0)
+
+class DropIds(PreProcessing):
+    def __init__(self, name="drop_ids", columns=None):
+        super().__init__(name, columns)
+
+    def __call__(self, x):
+        x.drop(["ID", "DAY_ID", "COUNTRY"], inplace=True, axis=1)
+
 
 
 if __name__ == "__main__":

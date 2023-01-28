@@ -15,6 +15,9 @@ class Model:
     def predict(self, x_test):
         raise NotImplementedError("Prediction function not implemented.")
 
+    def __repr__(self):
+        return self.name
+
     def submit(self, dataset, name="dummy", dir_name="challenge_data"):
         X_test = dataset.X_test
         test_IDs = dataset.get_test_IDs()
