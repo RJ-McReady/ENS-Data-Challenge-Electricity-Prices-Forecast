@@ -1,5 +1,5 @@
 import numpy as np
-
+import os
 
 class Model:
     """
@@ -14,3 +14,14 @@ class Model:
 
     def predict(self, x_test):
         raise NotImplementedError("Prediction function not implemented.")
+
+    def submit(self, dataset, name="dummy", dir_name="challenge_data"):
+        X_test = dataset.X_test
+        test_IDs = dataset.get_test_IDs()
+        y_test = test_IDs[["ID"]]
+        y_test["TARGET"] = self.predict(X_test)
+        name = name + "csv"
+        dir_path = os.path.join(dir_name, "submissions")
+        y_test.to_csv(os.path.join(dir_path, name), index=False)
+        
+        return y_test
