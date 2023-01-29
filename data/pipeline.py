@@ -4,7 +4,7 @@ import utils.formatting
 
 
 class Pipeline:
-    def __init__(self, pre_processing_list: list[PreProcessing]):
+    def __init__(self, pre_processing_list):
         self.pre_processing_list = pre_processing_list
 
     def step(self, x, n_step):
