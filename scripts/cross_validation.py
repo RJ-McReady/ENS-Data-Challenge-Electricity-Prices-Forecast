@@ -9,7 +9,7 @@ import scipy.stats
 
 
 class KFoldCrossValidation:
-    def __init__(self, strategies: list[Strategy], k=10):
+    def __init__(self, strategies, k=10):
         self._strategies = strategies
         self.nb_strategies = len(self._strategies)
         self._scores = np.zeros((k, self.nb_strategies), dtype=np.float64)
